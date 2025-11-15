@@ -1,0 +1,65 @@
+# ReplicaSet Example
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: web-replica-set
+  namespace: default
+spec:
+  # Number of replicas to maintain
+  replicas: 3
+  # Selector to identify pods managed by this ReplicaSet
+  selector:
+    matchLabels:
+      app: web-app
+      tier: frontend
+  # Pod template specification
+  template:
+    metadata:
+      labels:
+        app: web-app
+        tier: frontend
+        version: v1
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.14
+        ports:
+        - containerPort: 80
+        # Resource requests
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+# Service to expose the ReplicaSet
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: default
+spec:
+  selector:
+    app: web-app
+    tier: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
