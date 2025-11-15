@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-affinity-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: affinity-app
+  template:
+    metadata:
+      labels:
+        app: affinity-app
+    spec:
+      affinity:
+        nodeAffinity:
+          # Hard requirement - pod won't be scheduled if condition not met
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                - ssd
+          # Soft preference - scheduler will try but won't fail
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-zone
+                operator: In
+                values:
+                - us-west-1a
+      containers:
+      - name: app
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+# Node labels setup (run these commands to prepare nodes):
+# kubectl label nodes node1 disktype=ssd
+# kubectl label nodes node2 node-zone=us-west-1a
