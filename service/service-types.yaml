@@ -1,0 +1,62 @@
+# Kubernetes Services - All Types Examples
+
+# 1. ClusterIP Service (Default)
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-clusterip
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80        # Service port
+    targetPort: 8080  # Pod port
+---
+
+# 2. NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-nodeport
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80           # Service port
+    targetPort: 8080   # Pod port
+    nodePort: 30080    # External port (30000-32767)
+---
+
+# 3. LoadBalancer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-loadbalancer
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+
+# 4. ExternalName Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-db
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: external-database.example.com
+  ports:
+  - port: 3306
