@@ -1,0 +1,49 @@
+# Namespace creation with Resource Quota
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    environment: prod
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+  labels:
+    environment: staging
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    environment: dev
+---
+# Resource Quota for production namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: prod-quota
+  namespace: production
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: 20Gi
+    limits.cpu: "20"
+    limits.memory: 40Gi
+    pods: "50"
+---
+# Resource Quota for staging namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: staging-quota
+  namespace: staging
+spec:
+  hard:
+    requests.cpu: "5"
+    requests.memory: 10Gi
+    limits.cpu: "10"
+    limits.memory: 20Gi
+    pods: "30"
