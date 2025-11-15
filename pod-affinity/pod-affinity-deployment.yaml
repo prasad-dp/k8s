@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+        tier: frontend
+    spec:
+      affinity:
+        # Pod Affinity - schedule together with cache pods
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - cache
+              topologyKey: kubernetes.io/hostname
+        # Pod Anti-Affinity - spread replicas across nodes
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - web
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: web
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+# Companion Cache Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cache
+  template:
+    metadata:
+      labels:
+        app: cache
+    spec:
+      containers:
+      - name: cache
+        image: redis:latest
+        ports:
+        - containerPort: 6379
