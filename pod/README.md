@@ -1,14 +1,4 @@
 
-## Nginx Pod Configuration
-
-The nginx-pod.yaml file includes:
-
-- **Container Image:** nginx:latest
-- **Port:** 80 (HTTP)
-- **Resource Requests:** CPU 100m, Memory 128Mi
-- **Resource Limits:** CPU 500m, Memory 512Mi
-- **Liveness Probe:** Checks pod health every 10 seconds after 30-second delay
-- **Readiness Probe:** Checks pod readiness every 5 seconds after 5-second delay
 
 ## Running the Pod
 
