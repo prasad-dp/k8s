@@ -1,14 +1,3 @@
-# Kubernetes Pod Deployment - Nginx
-
-This folder contains Kubernetes pod deployment configurations with practical examples.
-
-## Files
-
-- **nginx-pod.yaml** - Pod deployment configuration for Nginx web server with health probes and resource limits
-
-## What is a Pod?
-
-A Pod is the smallest deployable unit in Kubernetes. It typically contains a single container, though it can contain multiple containers that share network and storage resources.
 
 ## Nginx Pod Configuration
 
