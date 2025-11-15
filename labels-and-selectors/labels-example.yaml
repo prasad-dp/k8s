@@ -1,0 +1,93 @@
+# Labels and Selectors Example
+
+# 1. Pod with Multiple Labels
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend-pod
+  labels:
+    app: frontend
+    version: v1.0
+    environment: production
+    tier: web
+    team: platform
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+---
+
+# 2. Deployment with Labels and Selectors
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+    environment: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: web
+        version: v1.0
+    spec:
+      containers:
+      - name: web
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+
+# 3. Service with Label Selector
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+    tier: web
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+
+# 4. Deployment with Set-based Selector (not common in simple deployments)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+      - backend
+      - api-server
+    - key: environment
+      operator: NotIn
+      values:
+      - development
+  template:
+    metadata:
+      labels:
+        app: backend
+        environment: production
+    spec:
+      containers:
+      - name: backend
+        image: app-backend:latest
+        ports:
+        - containerPort: 8080
