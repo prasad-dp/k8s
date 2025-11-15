@@ -32,7 +32,6 @@ Kubernetes (K8s) is an open-source container orchestration platform that automat
 - Originally developed by Google and now maintained by the Cloud Native Computing Foundation (CNCF)
 - Kubernetes abstracts the underlying infrastructure and provides a unified platform for running containers
 
-![K8s Overview](https://kubernetes.io/images/kubernetes-horizontal-color.png)
 
 ---
 
