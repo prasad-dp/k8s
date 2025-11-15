@@ -1,0 +1,37 @@
+# Deployment with Toleration for Taints
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tainted-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gpu-app
+  template:
+    metadata:
+      labels:
+        app: gpu-app
+    spec:
+      # Tolerations allow this pod to be scheduled on nodes with taints
+      tolerations:
+      - key: "gpu"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "workload-type"
+        operator: "Equal"
+        value: "compute-intensive"
+        effect: "NoExecute"
+        tolerationSeconds: 3600  # Tolerate for 1 hour before eviction
+      containers:
+      - name: app-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+# Example: Node Taint Application Command
+# Apply this taint to a node to make it exclusive for GPU workloads:
+# kubectl taint nodes node-gpu-1 gpu=true:NoSchedule
+# kubectl taint nodes node-gpu-1 workload-type=compute-intensive:NoExecute
