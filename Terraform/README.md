@@ -201,7 +201,7 @@ Now you can SSH into your server!
 
 ---
 
-## State File - How Terraform Remembers (EXPANDED)
+## State File - How Terraform Remembers 
 
 Terraform keeps a record (state file) of everything it created. It's like Terraform's memory.
 
