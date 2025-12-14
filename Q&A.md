@@ -1,8 +1,5 @@
 # Kubernetes — FAQ & Concepts
 
-Current Date: 2025-12-14  
-User: prasad-dp
-
 ---
 
 **I. Fundamentals & Comparisons**
