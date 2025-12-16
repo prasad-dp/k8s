@@ -51,8 +51,8 @@ Cube Proxy is the networking component of Kubernetes. Its primary role is to con
 **III. Pods, Containers & Runtime Management**
 
 **8. What is the difference between a Docker container and a Kubernetes Pod?**  
-A Pod is the smallest deployable unit in Kubernetes. A Pod acts as a runtime specification for a container. A Pod can contain one single container or multiple containers. If a Pod has multiple containers, they share the same network, storage, and resources. Pods are ephemeral; they can be created, destroyed, and replaced automatically.
-
+**A Docker container** is the actual runtime environment that packages your application code and dependencies; it is the "box" where your app runs.
+**A Kubernetes Pod**, on the other hand, is a logical wrapper around that container and acts as the smallest deployable unit in Kubernetes. Kubernetes does not run containers directly; it manages Pods, which can hold one or more tightly coupled containers. The key difference is that while containers are designed for isolation, a Pod allows the containers inside it to share the same resources, such as storage volumes and a single network IP address, enabling them to communicate easily as if they were on the same machine.
 **9. How do two different containers running in a single Pod communicate to each other, and how does this happen internally?**  
 If two containers are running in the same Pod, they can communicate using localhost followed by the port number. Internally, Kubernetes handles this by using Pause containers to share the networking stack among the containers within the same Pod.
 
