@@ -7,6 +7,7 @@
 **1. What is Kubernetes and why is it used?**  
 **What is Kubernetes?**
 Kubernetes (often called K8s) is an open-source container orchestration platform. It automates the deployment, scaling, and management of containerized applications (like Docker).
+
 **Why is it used?**
 We use Kubernetes to solve the problem of managing hundreds or thousands of containers manually. Key reasons include:
 
