@@ -1,0 +1,25 @@
+# first of all we need to set the label for node
+# kubectl label nodes <nde-name> disktype=ssd
+# you can use any selector type like gpu,ssd
+
+#here is actual deployment with node selector
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssd-web-server
+spec:
+  replicas: 3              
+  selector:
+    matchLabels:
+      app: nginx-ssd
+  template:                 # The Pod "Blueprint" begins here
+    metadata:
+      labels:
+        app: nginx-ssd
+    spec:                   # The Pod's technical spec
+      nodeSelector:         # <--- All 3 replicas will go to "ssd" nodes
+        disktype: ssd
+      containers:
+      - name: nginx
+        image: nginx:latest
