@@ -1,49 +1,54 @@
-# Namespace creation with Resource Quota
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: production
-  labels:
-    environment: prod
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: staging
+  name: dev
   labels:
-    environment: staging
+    env: dev
+
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: development
-  labels:
-    environment: dev
----
-# Resource Quota for production namespace
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: prod-quota
-  namespace: production
+  name: dev-res
+  namespace: dev
 spec:
   hard:
-    requests.cpu: "10"
-    requests.memory: 20Gi
-    limits.cpu: "20"
-    limits.memory: 40Gi
-    pods: "50"
+    requests.cpu: 10m
+    requests.memory: 500Mi
+    limits.cpu: 50m
+    limits.memory: 1Gi
+    pods: "3"
 ---
-# Resource Quota for staging namespace
-apiVersion: v1
-kind: ResourceQuota
+
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: staging-quota
-  namespace: staging
+  name: pythoy-deployment
+  namespace: dev
 spec:
-  hard:
-    requests.cpu: "5"
-    requests.memory: 10Gi
-    limits.cpu: "10"
-    limits.memory: 20Gi
-    pods: "30"
+  replicas: 4
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+        - name: python-app
+          image: prasad315/flask-app
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 3m
+              memory: 150Mi
+            limits:
+              cpu: 10m
+              memory: 300Mi
+
+
+# this deployment will create only 3 replicas as you set pods limit is 3 in resource quota
+# i thisway you can limit the entire resource for namesapce and pods too
